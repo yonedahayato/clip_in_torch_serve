@@ -36,6 +36,7 @@ RUN --mount=type=cache,id=apt-dev,target=/var/cache/apt \
     python3-venv \
     openjdk-11-jre-headless \
     curl \
+    git \
     && rm -rf /var/lib/apt/lists/* \
     && cd /tmp \
     && curl -O https://bootstrap.pypa.io/get-pip.py \
@@ -71,6 +72,10 @@ RUN TORCH_VER=$(curl --silent --location https://pypi.org/pypi/torch/json | pyth
         python -m pip install --no-cache-dir torch==$TORCH_VER+cpu torchvision==$TORCH_VISION_VER+cpu -f https://download.pytorch.org/whl/torch_stable.html; \
     fi
 RUN python -m pip install -U setuptools && python -m pip install --no-cache-dir captum torchtext torchserve torch-model-archiver
+
+RUN python -m pip install ftfy regex tqdm
+
+RUN python -m pip install git+https://github.com/openai/CLIP.git
 
 # Final image for production
 FROM ${BASE_IMAGE} AS runtime-image
